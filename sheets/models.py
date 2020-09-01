@@ -4,6 +4,8 @@ from django.utils.text import slugify
 
 # A blank character sheet to create from scratch
 class EmptyCharacterSheet(models.Model):
+    user = models.ForeignKey(
+        'authentication.CustomUser', on_delete=models.CASCADE, default=None)
     name = models.CharField(blank=False, null=True, max_length=120)
     slug = models.SlugField(blank=True, null=True)
     bio = models.TextField(blank=True, null=True, max_length=300)
