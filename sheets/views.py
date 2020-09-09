@@ -15,10 +15,20 @@ class EmptyCharacterSheetCreate(generics.CreateAPIView):
         serializer.save(user=self.request.user)
 
 
-# List character sheet view
+# List character sheet view for all character sheets in the DB
 class EmptyCharacterSheetList(generics.ListAPIView):
     queryset = EmptyCharacterSheet.objects.all()
     serializer_class = EmptyCharacterSheetSerializer
+
+
+# Character sheet list view by user
+class EmptyCharacterSheetUserList(generics.ListAPIView):
+    queryset = EmptyCharacterSheet.objects.all()
+    serializer_class = EmptyCharacterSheetSerializer
+
+    def get_queryset(self):
+        user = self.kwargs['pk']
+        return EmptyCharacterSheet.objects.filter(user__id=user)
 
 
 # Retrieve/update sheet view
