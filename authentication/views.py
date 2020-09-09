@@ -3,6 +3,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics, permissions
+from sheets import permissions
 from .models import CustomUser
 from .serializers import CustomUserSerializer
 
@@ -27,7 +28,7 @@ class CustomAuthToken(ObtainAuthToken):
 class UserRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsOwnerOrReadOnly,)
 
     def get_object(self):
         return self.request.user

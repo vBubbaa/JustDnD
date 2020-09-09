@@ -5,7 +5,7 @@ from . import models
 class FeatSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Feat
-        fields = ['featName', 'featVal']
+        fields = ['featName', 'featVal', 'pk']
 
 
 class EmptyCharacterSheetSerializer(serializers.ModelSerializer):
@@ -25,15 +25,29 @@ class EmptyCharacterSheetSerializer(serializers.ModelSerializer):
             models.Feat.objects.create(characterSheet=sheet, **feat)
         return sheet
 
-# {
-#     "charactersheetfeat": [
-#          {
-#                 "featName": "str",
-#                 "featVal": "32"
-#             }
-#     ],
-#     "name": "feattest",
-#     "slug": "",
-#     "bio": "",
-#     "hp": null
-# }
+    def update(self, instance, validated_data):
+        # Response data
+        feat_data = validated_data.pop('charactersheetfeat')
+        # DB Data
+        feats = dict((i.id, i) for i in instance.charactersheetfeat.all())
+        print(str(feats))
+
+        instance.name = validated_data.get('name', instance.name)
+        instance.bio = validated_data.get('bio', instance.bio)
+        instance.hp = validated_data.get('hp', instance.hp)
+        instance.save()
+
+        for feat in feat_data:
+            if 'id' in feat:
+                f = feats.pop(feat['id'])
+                f.featName = feat['featName']
+                f.featVal = feat['featVal']
+                f.save()
+
+            else:
+                models.Feat.objects.create(characterSheet=instance, **feat)
+
+        if len(feats) > 0:
+            for feat in feats.values():
+                feat.delete()
+        return instance
