@@ -18,3 +18,15 @@ class EmptyCharacterSheet(models.Model):
 
     def __str__(self):
         return self.name
+
+
+# Feat model that ties to character sheets.
+# For example: A 'STR' feat with a value of 10.
+class Feat(models.Model):
+    featName = models.CharField(max_length=120, blank=True, null=False)
+    featVal = models.CharField(max_length=120, blank=True, null=False)
+    characterSheet = models.ForeignKey(
+        EmptyCharacterSheet, related_name="charactersheetfeat", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.featName
