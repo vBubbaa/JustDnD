@@ -1,9 +1,11 @@
 from rest_framework import generics
 from rest_framework.response import Response
-from .serializers import EmptyCharacterSheetSerializer
-from .models import EmptyCharacterSheet
+from .serializers import EmptyCharacterSheetSerializer, TemplateSerializer
+from .models import EmptyCharacterSheet, CharacterSheetTemplate
 from sheets.permissions import IsOwnerOrReadOnly
 
+
+# # # # # # # # # # # # Character Sheets # # # # # # # # # # # #
 
 # Create character sheet view
 class EmptyCharacterSheetCreate(generics.CreateAPIView):
@@ -27,8 +29,8 @@ class EmptyCharacterSheetUserList(generics.ListAPIView):
     serializer_class = EmptyCharacterSheetSerializer
 
     def get_queryset(self):
-        user = self.kwargs['pk']
-        return EmptyCharacterSheet.objects.filter(user__id=user)
+        user = self.kwargs['slug']
+        return EmptyCharacterSheet.objects.filter(user__username=user)
 
 
 # Retrieve/update sheet view
@@ -43,3 +45,49 @@ class EmptyCharacterSheetDelete(generics.DestroyAPIView):
     queryset = EmptyCharacterSheet.objects.all()
     serializer_class = EmptyCharacterSheetSerializer
     permission_classes = [IsOwnerOrReadOnly]
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+
+# # # # # # # # # # # # Templates # # # # # # # # # # # # # # # #
+
+# Create template view
+class TemplateCreate(generics.CreateAPIView):
+    queryset = CharacterSheetTemplate.objects.all()
+    serializer_class = TemplateSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+# List template view for all templates in the DB
+class TemplateList(generics.ListAPIView):
+    queryset = CharacterSheetTemplate.objects.all()
+    serializer_class = TemplateSerializer
+
+
+# Character sheet list view by user
+class TemplateUserList(generics.ListAPIView):
+    queryset = CharacterSheetTemplate.objects.all()
+    serializer_class = TemplateSerializer
+
+    def get_queryset(self):
+        user = self.kwargs['slug']
+        return CharacterSheetTemplate.objects.filter(user__username=user)
+
+
+# Retrieve/update sheet view
+class TemplateGetUpdate(generics.RetrieveUpdateAPIView):
+    queryset = CharacterSheetTemplate.objects.all()
+    serializer_class = TemplateSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
+
+# Delete sheet view
+class TemplateDelete(generics.DestroyAPIView):
+    queryset = CharacterSheetTemplate.objects.all()
+    serializer_class = TemplateSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #

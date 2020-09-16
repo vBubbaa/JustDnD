@@ -30,3 +30,32 @@ class Feat(models.Model):
 
     def __str__(self):
         return self.featName
+
+
+# A blank character sheet to create from scratch
+class CharacterSheetTemplate(models.Model):
+    user = models.ForeignKey(
+        'authentication.CustomUser', on_delete=models.CASCADE, default=None)
+    oneshot = models.CharField(blank=False, null=False, max_length=120)
+    oneshoturl = models.URLField(max_length=300, blank=True, null=True)
+    slug = models.SlugField(blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        name = self.oneshot
+        self.slug = slugify(name, allow_unicode=True)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.oneshot
+
+
+# Feat model that ties to template.
+# For example: A 'STR' feat with a value of 10.
+class TemplateFeat(models.Model):
+    featName = models.CharField(max_length=120, blank=True, null=False)
+    featVal = models.CharField(max_length=120, blank=True, null=False)
+    template = models.ForeignKey(
+        CharacterSheetTemplate, related_name="templatefeat", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.featName
