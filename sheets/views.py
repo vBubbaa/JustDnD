@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from .serializers import EmptyCharacterSheetSerializer, TemplateSerializer
 from .models import EmptyCharacterSheet, CharacterSheetTemplate
 from sheets.permissions import IsOwnerOrReadOnly
+from sheets.pagination import StandardPagination
 
 
 # # # # # # # # # # # # Character Sheets # # # # # # # # # # # #
@@ -65,6 +66,7 @@ class TemplateCreate(generics.CreateAPIView):
 class TemplateList(generics.ListAPIView):
     queryset = CharacterSheetTemplate.objects.all()
     serializer_class = TemplateSerializer
+    pagination_class = StandardPagination
 
 
 # Character sheet list view by user
