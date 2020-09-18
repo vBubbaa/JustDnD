@@ -4,6 +4,7 @@ from .serializers import EmptyCharacterSheetSerializer, TemplateSerializer
 from .models import EmptyCharacterSheet, CharacterSheetTemplate
 from sheets.permissions import IsOwnerOrReadOnly
 from sheets.pagination import StandardPagination
+from rest_framework import filters
 
 
 # # # # # # # # # # # # Character Sheets # # # # # # # # # # # #
@@ -66,6 +67,8 @@ class TemplateCreate(generics.CreateAPIView):
 class TemplateList(generics.ListAPIView):
     queryset = CharacterSheetTemplate.objects.all()
     serializer_class = TemplateSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['oneshot', 'user__username', 'oneshoturl']
     pagination_class = StandardPagination
 
 
