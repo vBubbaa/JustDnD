@@ -5,3 +5,4 @@ from django.contrib.auth.models import AbstractUser
 # Custom user model
 class CustomUser(AbstractUser):
     bio = models.TextField(blank=True, null=True, max_length=200)
+    verified = models.BooleanField(blank=True, null=True, default=False)

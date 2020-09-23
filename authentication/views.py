@@ -34,6 +34,14 @@ class UserRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
         return self.request.user
 
 
+class FetchUserOverview(generics.RetrieveAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+
+    def get_object(self):
+        return CustomUser.objects.get(username=self.kwargs['user'])
+
+
 # Create user (Register)
 class CreateUser(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
