@@ -6,7 +6,7 @@ from sheets.permissions import IsOwnerOrReadOnly
 from sheets.pagination import StandardPagination
 from rest_framework import filters
 from rest_framework import status
-from sheets.Exceptions import CharacterSheetLimitExceeded
+from sheets.Exceptions import CharacterSheetLimitExceeded, TemplateLimitExceeded
 
 
 # # # # # # # # # # # # Character Sheets # # # # # # # # # # # #
@@ -67,7 +67,12 @@ class TemplateCreate(generics.CreateAPIView):
     permission_classes = [IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        # Limit users to only 10 character sheets
+        if (CharacterSheetTemplate.objects.filter(
+                user=self.request.user).count() < 10 or self.request.user.verified):
+            serializer.save(user=self.request.user)
+        else:
+            raise TemplateLimitExceeded()
 
 
 # List template view for all templates in the DB
