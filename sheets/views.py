@@ -5,6 +5,8 @@ from .models import EmptyCharacterSheet, CharacterSheetTemplate
 from sheets.permissions import IsOwnerOrReadOnly
 from sheets.pagination import StandardPagination
 from rest_framework import filters
+from rest_framework import status
+from sheets.Exceptions import CharacterSheetLimitExceeded
 
 
 # # # # # # # # # # # # Character Sheets # # # # # # # # # # # #
@@ -16,7 +18,12 @@ class EmptyCharacterSheetCreate(generics.CreateAPIView):
     permission_classes = [IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        # Limit users to only 10 character sheets
+        if EmptyCharacterSheet.objects.filter(
+                user=self.request.user).count() < 10:
+            serializer.save(user=self.request.user)
+        else:
+            raise CharacterSheetLimitExceeded()
 
 
 # List character sheet view for all character sheets in the DB
