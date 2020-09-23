@@ -19,8 +19,8 @@ class EmptyCharacterSheetCreate(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         # Limit users to only 10 character sheets
-        if EmptyCharacterSheet.objects.filter(
-                user=self.request.user).count() < 10:
+        if (EmptyCharacterSheet.objects.filter(
+                user=self.request.user).count() < 10 or self.request.user.verified):
             serializer.save(user=self.request.user)
         else:
             raise CharacterSheetLimitExceeded()
