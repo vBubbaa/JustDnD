@@ -1,15 +1,20 @@
 import os
 from datetime import timedelta
+from justdndbackend import secrets
+
+if secrets.ENVIRON == 'dev':
+    from .development import *
+else:
+    from .production import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '8$$vn9j5@n)a67-uehg6etkwm38=t2^s+4b=_n=gw0dy#+hzg3'
+SECRET_KEY = secrets.DJANGO_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -22,7 +27,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 AUTH_USER_MODEL = "authentication.CustomUser"
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -75,6 +79,30 @@ TEMPLATES = [
         },
     },
 ]
+
+# Logging conf
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'logfile': {
+            'class': 'logging.handlers.WatchedFileHandler',
+            'filename': 'django-steamkit-integration.log'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['logfile'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django-steamkit-integration': {
+            'handlers': ['logfile'],
+            'level': 'WARNING',
+            'propagate': False
+        },
+    },
+}
 
 WSGI_APPLICATION = 'justdndbackend.wsgi.application'
 
