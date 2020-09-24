@@ -17,12 +17,19 @@ SECRET_KEY = os.environ.get('justrolldndkey')
 
 LOGIN_REDIRECT_URL = '/'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if os.environ.get('justrolldnd_env') == 'dev':
+    DEBUG = True
+    ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
+    CORS_ORIGIN_ALLOW_ALL = True
+else:
+    DEBUG = False
+    ALLOWED_HOSTS = ['justrolldnd.com',
+                     'https://justrolldnd.herokuapp.com/', 'justrolldnd.herokuapp.com']
 
-ALLOWED_HOSTS = []
-
-CORS_ORIGIN_ALLOW_ALL = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
 
 # Authentication Stuff
 AUTH_USER_MODEL = "authentication.CustomUser"
