@@ -23,8 +23,7 @@ if os.environ.get('justrolldnd_env') == 'dev':
     CORS_ORIGIN_ALLOW_ALL = True
 else:
     DEBUG = False
-    ALLOWED_HOSTS = ['justrolldnd.com',
-                     'https://justrolldnd.herokuapp.com/', 'justrolldnd.herokuapp.com', 'https://justrolldndfrontend.herokuapp.com', 'justrolldndfrontend.herokuapp.com']
+    ALLOWED_HOSTS = ['justrolldnd.com']
 
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
