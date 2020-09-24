@@ -1,6 +1,7 @@
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
+from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework import generics, permissions
 from sheets import permissions
@@ -39,7 +40,10 @@ class FetchUserOverview(generics.RetrieveAPIView):
     serializer_class = CustomUserSerializer
 
     def get_object(self):
-        return CustomUser.objects.get(username=self.kwargs['user'])
+        try:
+            return CustomUser.objects.get(username=self.kwargs['user'])
+        except CustomUser.DoesNotExist:
+            raise Http404
 
 
 # Create user (Register)
