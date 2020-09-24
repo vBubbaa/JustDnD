@@ -1,0 +1,1 @@
+web: gunicorn justdndbackend.wsgi --log-file -
