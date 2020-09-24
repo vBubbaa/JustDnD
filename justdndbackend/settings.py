@@ -1,7 +1,8 @@
 import os
 from datetime import timedelta
+from justdndbackend import secrets
 
-if os.environ.get('justrolldnd_env') == 'dev':
+if secrets.ENVIRON == 'dev':
     from .development import *
 else:
     from .production import *
@@ -13,7 +14,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('justrolldndkey')
+SECRET_KEY = secrets.DJANGO_SECRET_KEY
 
 LOGIN_REDIRECT_URL = '/'
 
