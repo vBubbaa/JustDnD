@@ -23,7 +23,8 @@ if os.environ.get('justrolldnd_env') == 'dev':
     CORS_ORIGIN_ALLOW_ALL = True
 else:
     DEBUG = False
-    ALLOWED_HOSTS = ['justrolldnd.com']
+    ALLOWED_HOSTS = ['justrolldnd.com',
+                     'http://138.68.2.63/', 'https://138.68.2.63/']
 
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SECURE_SSL_REDIRECT = True
